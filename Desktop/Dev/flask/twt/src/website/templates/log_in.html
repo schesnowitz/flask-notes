@@ -1,13 +1,35 @@
 {% extends 'base.html' %}
 {% block title %}Log In{% endblock %}
 {% block content %}
-<h1>This is where you log in</h1>
-{% if bool == True %}
-
-It is true
-
-{% else %} 
-it is false
-{% endif %}  
+<h1>Log In</h1>
+<div class="container">
+    <br>
+    <form method="POST">
+        <div class="mb-3">
+          <input 
+          type="email" 
+          class="form-control" 
+          id="email" 
+          name= "email"
+          placeholder= "Enter Email"
+          aria-describedby="email">
+          
+        </div>
+ 
+          <div class="mb-3">
+            <input 
+            type="password" 
+            class="form-control" 
+            id="password1" 
+            name= "password1"
+            placeholder= "enter your password"
+            aria-describedby="password1">
+            
+          </div>
+          
+    
+        <button type="submit" class="btn btn-primary">Log In</button>
+      </form>
+  </div>
  
 {% endblock %}  
