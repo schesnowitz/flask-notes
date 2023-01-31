@@ -9,11 +9,29 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/log_in', methods=["GET", "POST"])
 def log_in():
-    return render_template('log_in.html', bool=True)
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                flash('Logged in successfully!', category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('views.home'))
+            else:
+                flash('Incorrect password, try again.', category='error')
+        else:
+            flash('Email does not exist.', category='error')
+
+    return render_template("log_in.html", user=current_user)
+    
 
 @auth.route('/log_out')
+@login_required
 def log_out():
-    return render_template('home.html') 
+    logout_user()
+    return redirect(url_for('auth.log_in'))
 
 @auth.route('/sign_up', methods=["GET", "POST"])
 def sign_up():
@@ -22,8 +40,10 @@ def sign_up():
         first_name = request.form.get('firstname')
         password_1 = request.form.get('password1')
         password_2 = request.form.get('password2')
-
-        if len(email) < 4:
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash("Email already exists, please log in.", category="error")
+        elif len(email) < 4:
             flash("Email is not valid", category="error")
         elif len(first_name) < 2:
             flash("Name is not valid", category="error")
